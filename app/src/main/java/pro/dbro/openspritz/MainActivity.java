@@ -15,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.view.KeyEvent;
 
 import nl.siegmann.epublib.domain.Book;
 
@@ -90,7 +91,7 @@ public class MainActivity extends ActionBarActivity implements WpmDialogFragment
             return true;
         } else if (id == R.id.action_theme) {
             int theme = getSharedPreferences(PREFS, Context.MODE_PRIVATE)
-                    .getInt("THEME", THEME_LIGHT);
+                    .getInt("THEME", THEME_DARK);
             if (theme == THEME_LIGHT) {
                 applyDarkTheme();
             } else {
@@ -100,6 +101,20 @@ public class MainActivity extends ActionBarActivity implements WpmDialogFragment
             ((SpritzFragment) getSupportFragmentManager().findFragmentByTag("spritsfrag")).chooseEpub();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    // added to support Glass interaction
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (((SpritzFragment) getSupportFragmentManager().findFragmentByTag("spritsfrag")).getSpritzer() != null) {
+            ((SpritzFragment) getSupportFragmentManager().findFragmentByTag("spritsfrag")).getSpritzView().performClick();
+            return false;
+        }
+        if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER) {
+            openOptionsMenu();
+            return true;
+        }
+        return false;
     }
 
     @Override
