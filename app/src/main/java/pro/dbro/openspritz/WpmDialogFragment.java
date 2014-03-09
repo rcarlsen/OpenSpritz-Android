@@ -6,11 +6,13 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.util.Log;
 
 /**
  * Created by davidbrodsky on 3/1/14.
@@ -85,14 +87,31 @@ public class WpmDialogFragment extends DialogFragment {
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-
             }
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-
             }
         });
+
+        // added to handle Glass interacion (swipes)
+        mWpmSeek.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int i, KeyEvent keyEvent) {
+                if (i == KeyEvent.KEYCODE_TAB) {
+                    if (keyEvent.isShiftPressed()) {
+                        // backwards swipe
+                        mWpmSeek.incrementProgressBy(-1);
+                        return true;
+                    }
+                    // forward swipe
+                    mWpmSeek.incrementProgressBy(1);
+                    return true;
+                }
+                return false;
+            }
+        });
+        mWpmSeek.requestFocus();
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(getActivity().getString(R.string.set_wpm))
@@ -100,6 +119,7 @@ public class WpmDialogFragment extends DialogFragment {
         mView = v;
         return builder.create();
     }
+
 
     private void setTrippin(boolean beTrippin){
         if(beTrippin){

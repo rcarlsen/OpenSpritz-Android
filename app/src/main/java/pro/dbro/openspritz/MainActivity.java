@@ -40,12 +40,14 @@ public class MainActivity extends ActionBarActivity implements WpmDialogFragment
                 break;
         }
         super.onCreate(savedInstanceState);
+
         getWindow().requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
         ActionBar actionBar = getActionBar();
         actionBar.setTitle("");
         actionBar.setDisplayShowHomeEnabled(false);
         actionBar.setDisplayShowTitleEnabled(false);
         actionBar.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
         setContentView(R.layout.activity_main);
 
         getSupportFragmentManager().beginTransaction()
@@ -56,6 +58,15 @@ public class MainActivity extends ActionBarActivity implements WpmDialogFragment
     @Override
     public void onResume() {
         super.onResume();
+
+        View decorView = getWindow().getDecorView();
+        // Hide the status bar.
+        int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
+        decorView.setSystemUiVisibility(uiOptions);
+        // Remember that you should never show the action bar if the
+        // status bar is hidden, so hide that too if necessary.
+        ActionBar actionBar = getActionBar();
+        actionBar.hide();
 
         if (getIntent().getAction().equals(Intent.ACTION_VIEW) && getIntent().getData() != null) {
             SpritzFragment frag = ((SpritzFragment) getSupportFragmentManager().findFragmentByTag("spritsfrag"));
@@ -104,14 +115,46 @@ public class MainActivity extends ActionBarActivity implements WpmDialogFragment
     }
 
     // added to support Glass interaction
+    // TODO: add the GDK and use the GestureDetector class for better interacation.
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (((SpritzFragment) getSupportFragmentManager().findFragmentByTag("spritsfrag")).getSpritzer() != null) {
-            ((SpritzFragment) getSupportFragmentManager().findFragmentByTag("spritsfrag")).getSpritzView().performClick();
-            return false;
-        }
+        // tap
         if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER) {
+            // on Glass, this will reveal the options as cards.
             openOptionsMenu();
+            return true;
+        }
+        // swipes
+        if (keyCode == KeyEvent.KEYCODE_TAB) {
+            if (((SpritzFragment) getSupportFragmentManager().findFragmentByTag("spritsfrag")).getSpritzer() != null) {
+                // we get multiple taps for long swipes
+                // since the spritzer does not (yet) support fast forward / rewind
+                // let's filter the events to only send a click if changing direction.
+                boolean shouldSendClick = false;
+                SpritzFragment sf = (SpritzFragment) getSupportFragmentManager().findFragmentByTag("spritsfrag");
+                // backwards swipe and playing, then stop
+                if (event.isShiftPressed() ) {
+                    if ( sf.getSpritzer().isPlaying() == true ) {
+                        shouldSendClick = true;
+                    }
+                }
+                // forwards swipe and not playing, then play
+                else if ( sf.getSpritzer().isPlaying() == false ) {
+                    shouldSendClick = true;
+                }
+
+                // this is received as a toggle, so only send the event if an edge has been detected
+                // (change in swipe direction, change is playback)
+                if (shouldSendClick) {
+                    sf.getSpritzView().performClick();
+                }
+                return true;
+            }
+        }
+
+        // down - leave the activity
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            this.finish();
             return true;
         }
         return false;
