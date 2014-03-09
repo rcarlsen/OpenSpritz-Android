@@ -4,6 +4,16 @@
 
 OpenSpritz-Android is a Spritz-like .epub reader for Android 3.0+ (API 11). Inspired by Miserlou's [OpenSpritz](https://github.com/Miserlou/OpenSpritz).
 
+This branch contains modifications to make the app function (somewhat)
+using Glass; the modifications are mostly to support keyboard navigation
+(Tab / Shift-tab for the trackpad swipes) and do not include the Glass
+Development Kit enhancements.
+
+In the absence of a file chooser on Glass, an epub path to a resource in
+the raw directory has been hard-coded (this resource has not been
+committed to the repo; you will need to supply your own epub file as a
+raw resource and update the URI accordingly - SpritzFragment.java:243).
+
 ## Lend a hand
 
 #### Enhancements

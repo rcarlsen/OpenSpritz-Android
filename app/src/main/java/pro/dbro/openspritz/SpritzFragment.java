@@ -282,32 +282,29 @@ public class SpritzFragment extends Fragment {
      * Fires an intent to spin up the "file chooser" UI and select an image.
      */
     public void chooseEpub() {
-        int id = this.getResources().getIdentifier("who_owns_the_future", "raw", "pro.dbro.openspritz");
-        Log.d("OpenSpritz", "epub id is: "+id);
-        Log.d("OpenSpritz", getResources().getResourceName(id));
-
+        // Glass does not seem to have a file chooser.
+        // this is just a way to POC the app with a bundled resource.
         Uri path = Uri.parse("android.resource://pro.dbro.openspritz/raw/who_owns_the_future");
         feedEpubToSpritzer(path);
         updateMetaUi();
+        if(false) { return; }
 
-        if(false) {
-            // ACTION_OPEN_DOCUMENT is the new API 19 action for the Android file manager
-            Intent intent;
-            if (Build.VERSION.SDK_INT >= 19) {
-                intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-            } else {
-                intent = new Intent(Intent.ACTION_GET_CONTENT);
-            }
-
-            // Filter to only show results that can be "opened", such as a
-            // file (as opposed to a list of contacts or timezones)
-            intent.addCategory(Intent.CATEGORY_OPENABLE);
-
-            // Currently no recognized epub MIME type
-            intent.setType("*/*");
-
-            startActivityForResult(intent, SELECT_EPUB);
+        // ACTION_OPEN_DOCUMENT is the new API 19 action for the Android file manager
+        Intent intent;
+        if (Build.VERSION.SDK_INT >= 19) {
+            intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        } else {
+            intent = new Intent(Intent.ACTION_GET_CONTENT);
         }
+
+        // Filter to only show results that can be "opened", such as a
+        // file (as opposed to a list of contacts or timezones)
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+
+        // Currently no recognized epub MIME type
+        intent.setType("*/*");
+
+        startActivityForResult(intent, SELECT_EPUB);
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
