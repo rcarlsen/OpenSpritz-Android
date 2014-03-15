@@ -9,10 +9,10 @@ using Glass; the modifications are mostly to support keyboard navigation
 (Tab / Shift-tab for the trackpad swipes) and do not include the Glass
 Development Kit enhancements.
 
-In the absence of a file chooser on Glass, an epub path to a resource in
-the raw directory has been hard-coded (this resource has not been
-committed to the repo; you will need to supply your own epub file as a
-raw resource and update the URI accordingly - SpritzFragment.java:243).
+To function on Glass, a file explorer app *must* be installed. [Andexplorer](http://www.lysesoft.com/products/andexplorer/) seems to work for me.
+
+An easy way to load epub files uses adb:
+``` adb push /path/to/local/file.epub /sdcard/ ```
 
 ## Lend a hand
 
