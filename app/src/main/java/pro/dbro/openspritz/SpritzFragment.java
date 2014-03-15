@@ -287,7 +287,7 @@ public class SpritzFragment extends Fragment {
         Uri path = Uri.parse("android.resource://pro.dbro.openspritz/raw/who_owns_the_future");
         feedEpubToSpritzer(path);
         updateMetaUi();
-        if(false) { return; }
+        if(true) { return; }
 
         // ACTION_OPEN_DOCUMENT is the new API 19 action for the Android file manager
         Intent intent;
