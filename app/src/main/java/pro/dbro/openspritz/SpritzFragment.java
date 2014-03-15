@@ -284,10 +284,12 @@ public class SpritzFragment extends Fragment {
     public void chooseEpub() {
         // Glass does not seem to have a file chooser.
         // this is just a way to POC the app with a bundled resource.
-        Uri path = Uri.parse("android.resource://pro.dbro.openspritz/raw/who_owns_the_future");
-        feedEpubToSpritzer(path);
-        updateMetaUi();
-        if(true) { return; }
+        // have disabled after side-loading a file explorer app
+        // (http://www.lysesoft.com/products/andexplorer/)
+//        Uri path = Uri.parse("android.resource://pro.dbro.openspritz/raw/who_owns_the_future");
+//        feedEpubToSpritzer(path);
+//        updateMetaUi();
+//        if(true) { return; }
 
         // ACTION_OPEN_DOCUMENT is the new API 19 action for the Android file manager
         Intent intent;
@@ -302,7 +304,8 @@ public class SpritzFragment extends Fragment {
         intent.addCategory(Intent.CATEGORY_OPENABLE);
 
         // Currently no recognized epub MIME type
-        intent.setType("*/*");
+        // but changed this from */* to prevent the music player intent from opening
+        intent.setType("file/*");
 
         startActivityForResult(intent, SELECT_EPUB);
     }
